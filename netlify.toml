@@ -14,3 +14,10 @@
     for = "/*"
     [headers.values]
         access-control-allow-origin = "*"
+
+[[redirects]]
+    from = "https://francyfox.amocrm.ru/*"
+    to = "https://francyfox.amocrm.ru/:splat"
+    status = 200
+    force = true
+    headers = {X-From = "Netlify"}

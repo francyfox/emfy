@@ -16,8 +16,8 @@ export const apiFetch = ofetch.create({
     baseURL,
     parseResponse: JSON.parse,
     headers: {
-        Accept: 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Accepts': 'application/json',
+        'Access-Control-Allow-Origin': 'https://francyfox.amocrm.ru',
     }
 })
 

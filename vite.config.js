@@ -2,7 +2,7 @@
 import UnoCSS from 'unocss/vite'
 export default {
     server: {
-        cors: false,
+        port: 3000,
     },
     plugins: [
         UnoCSS()
