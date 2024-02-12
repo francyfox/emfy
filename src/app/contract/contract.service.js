@@ -20,42 +20,63 @@ export const apiFetch = ofetch.create({
     }
 })
 
-export const apiGetToken = async () => apiFetch('/oauth/access_token', {
+const tokenRequestBody = {
+    client_id: authData.ID,
+    client_secret: authData.SECRET,
+}
+
+/**
+ *
+ * @param { Boolean } expired
+ * @param { null | String } refresh_token
+ * @returns {Promise<any, { data: TAmoToken }>}
+ */
+export const apiGetToken = async (
+    expired = false,
+    refresh_token = null
+) => apiFetch('/oauth/access_token', {
     method: 'POST',
-    body: {
-        client_id: authData.ID,
-        client_secret: authData.SECRET,
-        grant_type: 'authorization_code',
-        code: authData.CODE
-    }
+    body: expired
+        ? {...tokenRequestBody, grant_type: 'refresh_token', refresh_token }
+        : {...tokenRequestBody, grant_type: 'authorization_code', code: authData.CODE },
 })
 
 export const setTokenToLocalStorage = async () => {
     const response = await apiGetToken()
     try {
         window.localStorage.setItem('token', JSON.stringify(response.data))
+        // по идее храним тока access_token и expires_in.
+        console.log(response.data)
     } catch (error) {
-        throw new Error('Invalid data. Cannot serialize token \n' + error)
+        throw new Error('Invalid data. Cannot serialize token')
     }
 }
 
 export const setToken = async () => {
-    if (!window.localStorage.getItem('token')) {
-        await setTokenToLocalStorage()
-    } else {
-        /**
-         * @type TAmoToken
-         */
-        try {
-            const tokenData = JSON.parse(window.localStorage.getItem('token'))
-            const expired = tokenData.expires_in < Date.now() / 1000
+    /**
+     * @type TAmoToken
+     */
+    try {
+        const tokenData = getToken()
+        const expired = tokenData.expires_in < Date.now() / 1000
+        await setTokenToLocalStorage(expired, tokenData.refresh_token)
+    } catch (error) {
+        throw new Error('Invalid token data. Cannot deserialize token')
+    }
+}
 
-            if (expired) {
-                await setTokenToLocalStorage()
-            }
-        } catch (error) {
-            throw new Error('Invalid token data. Cannot deserialize token \n' + error)
-        }
+/**
+ *
+ * @returns {TAmoToken|null}
+ */
+export const getToken = () => {
+    const tokenSerialized = window.localStorage.getItem('token')
+    if (!tokenSerialized) return null
+
+    try {
+        return JSON.parse(tokenSerialized)
+    } catch (error) {
+        throw new Error('Invalid token data. Cannot deserialize token')
     }
 }
 
