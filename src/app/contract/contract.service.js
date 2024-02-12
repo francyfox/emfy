@@ -9,15 +9,14 @@ export const authData = {
     STATE: 'dd6ab882',
     CODE: import.meta.env.VITE_CODE,
 }
-
-export const baseURL = 'https://francyfox.amocrm.ru'
+export const baseURL = '/cors-proxy/https://francyfox.amocrm.ru'
 
 export const apiFetch = ofetch.create({
     baseURL,
     parseResponse: JSON.parse,
     headers: {
         'Accepts': 'application/json',
-        'Access-Control-Allow-Origin': 'https://francyfox.amocrm.ru',
+        'Access-Control-Allow-Origin': '*',
     }
 })
 

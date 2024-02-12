@@ -16,8 +16,8 @@
         access-control-allow-origin = "*"
 
 [[redirects]]
-    from = "https://francyfox.amocrm.ru/*"
-    to = "https://francyfox.amocrm.ru/:splat"
+    from = "/cors-proxy/*"
+    to = ":splat"
     status = 200
     force = true
-    headers = {X-From = "Netlify"}
+    headers = {Access-Control-Allow-Origin = "*"}
