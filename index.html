@@ -15,19 +15,32 @@
 
         <div class="relative overflow-x-auto max-w-4xl">
           <table class="w-full overflow-hidden text-sm text-left rtl:text-right text-gray-300 dark:text-gray-400 rd-3">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50/80 dark:bg-gray-700 dark:text-gray-400">
+            <thead class="text-md text-gray-700 uppercase bg-gray-50/80 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" class="px-6 py-3">
-                Product name
+                <div class="flex items-center gap-2">
+                  <div class="flex flex-col">
+                    <button type="button" class="flex justify-center items-center bg-white/2 border-slate-500" data-ask>
+                      <svg class="w-4 h-4 rotate-90" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M17.77 3.77L16 2L6 12l10 10l1.77-1.77L9.54 12z" fill="currentColor"></path></svg>
+                    </button>
+                    <button type="button" class="flex justify-center items-center bg-white/2 border-slate-500" data-desk>
+                      <svg class="w-4 h-4 rotate--90" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M17.77 3.77L16 2L6 12l10 10l1.77-1.77L9.54 12z" fill="currentColor"></path></svg>
+                    </button>
+                  </div>
+                  Названия
+                </div>
               </th>
               <th scope="col" class="px-6 py-3">
-                Color
+                Бюджет
               </th>
               <th scope="col" class="px-6 py-3">
-                Category
+                Создано
               </th>
               <th scope="col" class="px-6 py-3">
-                Price
+                Изменено
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Автор
               </th>
             </tr>
             </thead>
