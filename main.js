@@ -1,11 +1,9 @@
 import 'virtual:uno.css'
 import '@fontsource-variable/jetbrains-mono';
 import './src/css/style.css'
-import {apiAuth} from "./src/app/contract/contract.service.js";
+import { setToken } from "./src/app/contract/contract.service.js";
 
+(async () => {
+    await setToken()
+})()
 
-await apiAuth()
-
-if(window.opener){
-    window.opener.postMessage({'error': undefined, 'status': 'ok'}, "*");
-}

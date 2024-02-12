@@ -10,13 +10,14 @@ export const authData = {
     CODE: import.meta.env.VITE_CODE,
 }
 
-export const baseURL = 'https://francyfox.amocrm.ru/api/v4'
+export const baseURL = 'https://francyfox.amocrm.ru'
 
 export const apiFetch = ofetch.create({
     baseURL,
     parseResponse: JSON.parse,
     headers: {
         Accept: 'application/json',
+        'Access-Control-Allow-Origin': '*'
     }
 })
 
@@ -56,12 +57,13 @@ export const setToken = async () => {
     /**
      * @type TAmoToken
      */
-    try {
-        const tokenData = getToken()
+    const tokenData = getToken()
+
+    if (tokenData) {
         const expired = tokenData.expires_in < Date.now() / 1000
         await setTokenToLocalStorage(expired, tokenData.refresh_token)
-    } catch (error) {
-        throw new Error('Invalid token data. Cannot deserialize token')
+    } else {
+        await setTokenToLocalStorage()
     }
 }
 
