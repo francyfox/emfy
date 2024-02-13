@@ -1,5 +1,5 @@
 import { apiV4Fetch } from '#root/app/auth/auth.const.js'
-import { ContractComponent } from '#root/app/contract/contract.component.jsx'
+import { ContractComponent } from '#root/app/contract/contract.component.js'
 
 /**
  * @typedef {{
@@ -21,20 +21,13 @@ import { ContractComponent } from '#root/app/contract/contract.component.jsx'
  */
 
 /**
- * @param {TLeadsParams} params
- * @returns {Promise<Array<any, TLead>>}
+ * @param { apiV4Fetch } api
+ * @returns {Promise<void>}
  */
-export const fetchLeads = async (
-  params
-) => await apiV4Fetch('/leads', {
-  method: 'GET',
-  params
-})
-
-
 export const setupLeads = async (api) => {
   customElements.define('lead-list', ContractComponent)
 
   const contract = document.querySelector('lead-list')
+  contract.api = api
   await contract.renderList()
 }

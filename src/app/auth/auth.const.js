@@ -1,4 +1,4 @@
-import { ofetch, $Fetch } from 'ofetch'
+import { ofetch } from 'ofetch'
 
 export const authData = {
   SECRET: 'arDU0AQrcRK3KrQjFezMgvSe1WGAatNeHpF4nGM90MySpzy55UjOKp41BCZTGooZ',
@@ -15,7 +15,7 @@ export const apiFetch = ofetch.create({
 
 /**
  * @param { string } token
- * @type { function(string): $Fetch }
+ * @type { function(string): apiFetch }
  */
 export const apiV4Fetch = (token) => {
   return ofetch.create({
