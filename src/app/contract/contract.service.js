@@ -1,83 +1,40 @@
-import { ofetch } from 'ofetch'
+import { apiV4Fetch } from '#root/app/auth/auth.const.js'
+import { ContractComponent } from '#root/app/contract/contract.component.jsx'
 
 /**
- * @typedef {{ token_type: String, expires_in: Number, access_token: String, refresh_token: String }} TAmoToken
+ * @typedef {{
+ * page: number,
+ * limit: number,
+ * order: object
+ * }} TLeadsParams
  */
-export const authData = {
-    SECRET: 'arDU0AQrcRK3KrQjFezMgvSe1WGAatNeHpF4nGM90MySpzy55UjOKp41BCZTGooZ',
-    ID: 'dd6ab882-d5d2-4ce1-a82c-6d84e7428ffc',
-    STATE: 'dd6ab882',
-    CODE: import.meta.env.VITE_CODE,
-}
-export const baseURL = '/cors-proxy/https://francyfox.amocrm.ru'
 
-export const apiFetch = ofetch.create({
-    baseURL,
-    parseResponse: JSON.parse,
-    headers: {
-        'Accepts': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-    }
+/**
+ * @typedef {{
+ *   id: number,
+ *   name: string,
+ *   price: number,
+ *   created_by: number,
+ *   created_at: number,
+ *   updated_at: number
+ * }} TLead
+ */
+
+/**
+ * @param {TLeadsParams} params
+ * @returns {Promise<Array<any, TLead>>}
+ */
+export const fetchLeads = async (
+  params
+) => await apiV4Fetch('/leads', {
+  method: 'GET',
+  params
 })
 
-const tokenRequestBody = {
-    client_id: authData.ID,
-    client_secret: authData.SECRET,
+
+export const setupLeads = async (api) => {
+  customElements.define('lead-list', ContractComponent)
+
+  const contract = document.querySelector('lead-list')
+  await contract.renderList()
 }
-
-/**
- *
- * @param { Boolean } expired
- * @param { null | String } refresh_token
- * @returns {Promise<any, { data: TAmoToken }>}
- */
-export const apiGetToken = async (
-    expired = false,
-    refresh_token = null
-) => apiFetch('/oauth/access_token', {
-    method: 'POST',
-    body: expired
-        ? {...tokenRequestBody, grant_type: 'refresh_token', refresh_token }
-        : {...tokenRequestBody, grant_type: 'authorization_code', code: authData.CODE },
-})
-
-export const setTokenToLocalStorage = async () => {
-    const response = await apiGetToken()
-    try {
-        window.localStorage.setItem('token', JSON.stringify(response.data))
-        // по идее храним тока access_token и expires_in.
-        console.log(response.data)
-    } catch (error) {
-        throw new Error('Invalid data. Cannot serialize token')
-    }
-}
-
-export const setToken = async () => {
-    /**
-     * @type TAmoToken
-     */
-    const tokenData = getToken()
-
-    if (tokenData) {
-        const expired = tokenData.expires_in < Date.now() / 1000
-        await setTokenToLocalStorage(expired, tokenData.refresh_token)
-    } else {
-        await setTokenToLocalStorage()
-    }
-}
-
-/**
- *
- * @returns {TAmoToken|null}
- */
-export const getToken = () => {
-    const tokenSerialized = window.localStorage.getItem('token')
-    if (!tokenSerialized) return null
-
-    try {
-        return JSON.parse(tokenSerialized)
-    } catch (error) {
-        throw new Error('Invalid token data. Cannot deserialize token')
-    }
-}
-

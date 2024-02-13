@@ -1,15 +1,15 @@
 :root {
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 html, body {
-  display: block;
-  height: 100%;
+    display: block;
+    height: 100%;
 }
 
 body {
-  font-family: 'JetBrains Mono Variable', sans-serif;
+    font-family: 'JetBrains Mono Variable', sans-serif;
 }

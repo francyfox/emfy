@@ -10,14 +10,14 @@
     NODE_ENV = "production"
     VITE_CODE='def50200ac2ad77c0b23cadd50f23a1ed877ccffac89cf40cf3f73bf7ed2105e7ac9ae141bf49d1b4f904021210d040a8a1584a1c5c32f0b032dca24e0cc8eb0194e895872a40ffcc36309fff842576b85ada036464fc44dd96a2e4a9ae379fdffcb2e9f3537b4e73a030ebf51c92989ffab9f8743fdd48b9be35e8c72bdb05b6b233beeac9ee9a95d0a415a72b679f2afa2d5c465628badb5504355afd7b3afd6ed0c97dfbed890f884a82108bc5674c7ee679de5fe1c1165f04f26a6e6f31eaa891153cc0230c2a29233be5c4cd477a0ceaec8bb7cca03af174116300c52cdd89835e501bdca77f7c6337012df1a84078a4dfe848f72585e628b875fac5b93ef6ea609542946feb0c6991beac601eda3cd305b50310e158d7e6cdba06f1ff3091da0cd94e4f4d1f91c4f6720e7e5d12584b1041b92457b35b21a6cd9cc6430cdd81667a715361130b0b66f36985741aff5d84795a919c59b1a86973b485dc50558acd3d2d62329e7380e1573c25f1634e1694b33ec78353b0768247aaf9707b66ccba7965645bd06250c1f5078be7f40c30dfb305cba423f2b0168f91db74ea2ee7dd11813d8572e970a000dde38dc49edecf9630aecb830d9b69cfd714671848dc2f63f8e0196b1526dce641b2bd96d033358c338f047ed59eb223c2ba7308d'
 
-[[headers]]
-    for = "/*"
-    [headers.values]
-        access-control-allow-origin = "*"
+#[[headers]]
+#    for = "/*"
+#    [headers.values]
+#        access-control-allow-origin = "*"
 
-[[redirects]]
-    from = "/cors-proxy/*"
-    to = ":splat"
-    status = 200
-    force = true
-    headers = {Access-Control-Allow-Origin = "*"}
+#[[redirects]]
+#    from = "/proxy/*"
+#    to = ":splat"
+#    status = 200
+#    force = true
+#    headers = {Access-Control-Allow-Origin = "*"}

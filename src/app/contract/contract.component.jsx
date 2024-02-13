@@ -1,6 +1,5 @@
-export default function ContractComponent () {
-    return ``
-}
+import { fetchLeads } from '#root/app/contract/contract.service.js'
+import { api}
 
 export const ContractComponentLoader = () => `<div class="flex items-center text-yellow gap-2">
           <div role="status">
@@ -18,3 +17,31 @@ export const ContractComponentError = () => `<div class="flex items-center text-
 
           Произошла ошибка! Неудалось получить данные с amoCRM
         </div>`
+
+export class ContractComponent extends HTMLElement {
+  /**
+   * @type {apiV4Fetch | null}
+   */
+  api = null
+
+  constructor() {
+    super()
+    this.innerHTML = ContractComponentLoader()
+  }
+
+  async renderList () {
+    const data = await this.api({
+      page: 1,
+      perPage: 5,
+      sort: 'name',
+      order: 'desc'
+    })
+
+
+    try {
+      console.log(data);
+    } catch (error) {
+      this.innerHTML = ContractComponentError()
+    }
+  }
+}
