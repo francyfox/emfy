@@ -32,11 +32,13 @@ export const ContractItem = (item, responsible) => `<tr class="bg-white/20 borde
                      <td class="px-6 py-4">
                         ${localePrice(item.price)}
                     </td>
-                       <td class="px-6 py-4">
-                        ${localePrice(item.price)}
-                    </td>
                     <td class="px-6 py-4">
                         ${responsible.first_name} ${responsible.last_name}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="max-w-[150px] flex flex-wrap gap-2">
+                           ${item._embedded.tags.map(tag => TagItem(tag)).join('\n')}
+                        </div>
                     </td>
                     <td class="px-6 py-4">
                         ${localeDate(item.created_at)}
@@ -46,16 +48,14 @@ export const ContractItem = (item, responsible) => `<tr class="bg-white/20 borde
                     </td>
                 </tr>`
 
-export const TagItem = (item) => `<div class="flex items-center gap-2 px-5">`
-export const ContractList = (body) => `        <div class="relative overflow-x-auto max-w-4xl">
-            <table class="w-full overflow-hidden text-sm text-left rtl:text-right text-gray-300 dark:text-gray-400 rd-3">
-                <thead class="text-md text-gray-700 uppercase bg-gray-50/80 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            <div class="flex items-center gap-2">
-                                <div class="flex flex-col">
+export const TagItem = (tag) =>
+  `<div style="background: #${tag.color ?? '808080'}" class="flex items-center px-2 py-1 rd">
+      <span class="mix-blend-difference">${tag.name}</span>
+  </div>`
+
+export const SortButtons = (columnName) => `       <div class="flex flex-col">
                                     <button type="button"
-                                            class="flex justify-center items-center bg-white/2 border-slate-500" data-ask>
+                                            class="flex justify-center items-center bg-white/2 border-slate-500" data-ask="${columnName}">
                                         <svg class="w-4 h-4 rotate-90" xmlns="http://www.w3.org/2000/svg"
                                              xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
                                             <path d="M17.77 3.77L16 2L6 12l10 10l1.77-1.77L9.54 12z"
@@ -63,21 +63,31 @@ export const ContractList = (body) => `        <div class="relative overflow-x-a
                                         </svg>
                                     </button>
                                     <button type="button"
-                                            class="flex justify-center items-center bg-white/2 border-slate-500" data-desk>
+                                            class="flex justify-center items-center bg-white/2 border-slate-500" data-desk="${columnName}">
                                         <svg class="w-4 h-4 rotate--90" xmlns="http://www.w3.org/2000/svg"
                                              xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
                                             <path d="M17.77 3.77L16 2L6 12l10 10l1.77-1.77L9.54 12z"
                                                   fill="currentColor"></path>
                                         </svg>
                                     </button>
-                                </div>
+                                </div>`
+export const ContractList = (body) => `        <div class="relative overflow-x-auto">
+            <table class="w-full overflow-hidden text-sm text-left rtl:text-right text-gray-300 dark:text-gray-400 rd-3">
+                <thead class="text-md text-gray-700 uppercase bg-gray-50/80 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            <div class="flex items-center gap-2">
+                                ${SortButtons('name')}
                                 Названия
                             </div>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Бюджет
+                           <div class="flex items-center gap-2">
+                                ${SortButtons('price')}
+                                 Бюджет
+                            </div>
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 min-w-[150px]">
                             Отвественный
                         </th>
                         <th scope="col" class="px-6 py-3">

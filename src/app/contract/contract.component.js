@@ -5,7 +5,7 @@ import {
   ContractItem,
   ContractList
 } from '#root/app/contract/contact.templates.jsx'
-import { getResponsibleListIdFromLeads } from '#root/app/contract/contract.service.js'
+import { findResponsibleById, getResponsibleListIdFromLeads } from '#root/app/contract/contract.service.js'
 
 export class ContractComponent extends HTMLElement {
   /**
@@ -40,12 +40,13 @@ export class ContractComponent extends HTMLElement {
    * @returns {Promise<Array<TContact>>}
    */
   async fetchContacts (id) {
+    const filter = []
+    filter['id'] = id
+
     const contact = await this._api('/contacts', {
       method: 'GET',
       params: {
-        filter: {
-          id
-        }
+        filter
       }
     })
 
@@ -55,17 +56,19 @@ export class ContractComponent extends HTMLElement {
   async renderList () {
     try {
       const leads = await this.fetchLeads({
-        with: 'contacts, catalog_elements',
         page: 1,
         limit: 10,
         sort: 'name',
-        order: 'asc'
+        order: 'desc'
       })
 
       const responsibleIdList = getResponsibleListIdFromLeads(leads)
       const responsibleList = await this.fetchContacts(responsibleIdList)
 
-      const itemsTree = leads.map(item => ContractItem(item))
+      const itemsTree = leads.map((item) => {
+        return ContractItem(item, findResponsibleById(responsibleList, item.responsible_user_id))
+      })
+
       this.innerHTML = ContractList(itemsTree.join('\n'))
     } catch (error) {
       this.innerHTML = ContractComponentError()

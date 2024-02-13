@@ -15,6 +15,7 @@ import { ContractComponent } from '#root/app/contract/contract.component.js'
  *   name: string,
  *   price: number,
  *   responsible_user_id: number,
+ *   _embedded: { tags: Array<{ id: number, name: string, color: null | string }> }
  *   created_by: number,
  *   created_at: number,
  *   updated_at: number
@@ -51,5 +52,5 @@ export const getResponsibleListIdFromLeads = (leads) => {
 }
 
 export const findResponsibleById = (leads, id) => {
-
+  return leads.find(lead => lead.responsible_user_id === id)
 }
