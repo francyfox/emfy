@@ -5,6 +5,7 @@ import {
   ContractItem,
   ContractList
 } from '#root/app/contract/contact.templates.jsx'
+import { getResponsibleListIdFromLeads } from '#root/app/contract/contract.service.js'
 
 export class ContractComponent extends HTMLElement {
   /**
@@ -23,7 +24,7 @@ export class ContractComponent extends HTMLElement {
 
   /**
    * @param params
-   * @returns {Promise<Array<any, TLead>>}
+   * @returns {Promise<Array<TLead>>}
    */
   async fetchLeads (params) {
     const collection = await this._api('/leads', {
@@ -34,17 +35,37 @@ export class ContractComponent extends HTMLElement {
     return collection._embedded.leads
   }
 
+  /**
+   * @param {Array<Number>} id
+   * @returns {Promise<Array<TContact>>}
+   */
+  async fetchContacts (id) {
+    const contact = await this._api('/contacts', {
+      method: 'GET',
+      params: {
+        filter: {
+          id
+        }
+      }
+    })
+
+    return contact._embedded.contacts
+  }
+
   async renderList () {
     try {
-      const data = await this.fetchLeads({
-        with: 'contacts',
+      const leads = await this.fetchLeads({
+        with: 'contacts, catalog_elements',
         page: 1,
-        limit: 5,
+        limit: 10,
         sort: 'name',
-        order: 'desc'
+        order: 'asc'
       })
 
-      const itemsTree = data.map(item => ContractItem(item))
+      const responsibleIdList = getResponsibleListIdFromLeads(leads)
+      const responsibleList = await this.fetchContacts(responsibleIdList)
+
+      const itemsTree = leads.map(item => ContractItem(item))
       this.innerHTML = ContractList(itemsTree.join('\n'))
     } catch (error) {
       this.innerHTML = ContractComponentError()

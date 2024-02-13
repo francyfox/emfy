@@ -14,10 +14,20 @@ import { ContractComponent } from '#root/app/contract/contract.component.js'
  *   id: number,
  *   name: string,
  *   price: number,
+ *   responsible_user_id: number,
  *   created_by: number,
  *   created_at: number,
  *   updated_at: number
  * }} TLead
+ */
+
+/**
+ * @typedef {{
+ *   id: number,
+ *   name: string,
+ *   first_name: string,
+ *   last_name: string
+ * }} TContact
  */
 
 /**
@@ -30,4 +40,16 @@ export const setupLeads = async (api) => {
   const contract = document.querySelector('lead-list')
   contract.api = api
   await contract.renderList()
+}
+
+/**
+ * @param {Array<TLead>} leads
+ * @returns {Array<number>}
+ */
+export const getResponsibleListIdFromLeads = (leads) => {
+  return leads.map(lead => lead.responsible_user_id)
+}
+
+export const findResponsibleById = (leads, id) => {
+
 }

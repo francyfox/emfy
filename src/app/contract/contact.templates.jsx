@@ -20,16 +20,23 @@ export const ContractComponentError = () => `<div class="flex items-center text-
 
 
 /**
+ * @param { TContact } responsible
  * @param {TLead} item
  * @returns {string}
  * @constructor
  */
-export const ContractItem = (item) => `<tr class="bg-white/20 border-b dark:bg-gray-800 dark:border-gray-700">
+export const ContractItem = (item, responsible) => `<tr class="bg-white/20 border-b dark:bg-gray-800 dark:border-gray-700">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-200 whitespace-nowrap dark:text-white">
                         ${item.name}
                     </th>
-                    <td class="px-6 py-4">
+                     <td class="px-6 py-4">
                         ${localePrice(item.price)}
+                    </td>
+                       <td class="px-6 py-4">
+                        ${localePrice(item.price)}
+                    </td>
+                    <td class="px-6 py-4">
+                        ${responsible.first_name} ${responsible.last_name}
                     </td>
                     <td class="px-6 py-4">
                         ${localeDate(item.created_at)}
@@ -38,6 +45,8 @@ export const ContractItem = (item) => `<tr class="bg-white/20 border-b dark:bg-g
                         ${localeDate(item.updated_at)}
                     </td>
                 </tr>`
+
+export const TagItem = (item) => `<div class="flex items-center gap-2 px-5">`
 export const ContractList = (body) => `        <div class="relative overflow-x-auto max-w-4xl">
             <table class="w-full overflow-hidden text-sm text-left rtl:text-right text-gray-300 dark:text-gray-400 rd-3">
                 <thead class="text-md text-gray-700 uppercase bg-gray-50/80 dark:bg-gray-700 dark:text-gray-400">
@@ -69,13 +78,16 @@ export const ContractList = (body) => `        <div class="relative overflow-x-a
                             Бюджет
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Отвественный
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Тэги
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Создано
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Изменено
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Автор
                         </th>
                     </tr>
                 </thead>
