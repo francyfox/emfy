@@ -4,7 +4,7 @@ import {
   ContractItem,
   ContractList
 } from '#root/app/contract/contact.templates.jsx'
-import { findResponsibleById } from '#root/app/contract/contract.service.js'
+import { findResponsibleById } from '#root/app/contract/contract.helper.js'
 
 export class ContractComponent extends HTMLElement {
   constructor() {
@@ -14,6 +14,7 @@ export class ContractComponent extends HTMLElement {
 
 
   /**
+   * @description first render function
    * @param {TLead[]} leads
    * @param {TContact[]} responsibleList
    * @returns {Promise<void>}
@@ -24,6 +25,14 @@ export class ContractComponent extends HTMLElement {
     })
 
     this.innerHTML = ContractList(itemsTree.join('\n'))
+  }
+
+  async reRenderListBody (leads, responsibleList) {
+    const itemsTree = leads.map((item) => {
+      return ContractItem(item, findResponsibleById(responsibleList, item.responsible_user_id))
+    })
+
+    this.querySelector('tbody').innerHTML = itemsTree.join('\n')
   }
 
   renderError () {

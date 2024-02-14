@@ -2,6 +2,8 @@ import { apiV4Fetch } from '#root/app/auth/auth.const.js'
 import { ContractComponent } from '#root/app/contract/contract.component.js'
 import { getToken } from '#root/app/auth/auth.service.js'
 import ContractRepository from '#root/app/contract/contract.repository.js'
+import { getLocalStorage, setLocalStorage } from '#root/app/util.js'
+import { getResponsibleListIdFromLeads, sortByParam } from '#root/app/contract/contract.helper.js'
 
 /**
  * @typedef {{
@@ -50,6 +52,7 @@ export const setupSortButtons = (root) => {
       const hasDataAttr = e.target.hasAttribute('ask') || e.target.hasAttribute('desk')
       const target = hasDataAttr? e.target : e.target.closest('button')
       const { ask, desk } = target.dataset;
+      setLocalStorage('sort', { sortKey: ask ? 'ask' : 'desk', sortBy: ask || desk })
 
       root.dispatchEvent(new CustomEvent('sort', {
         detail: { ask, desk }
@@ -58,18 +61,21 @@ export const setupSortButtons = (root) => {
   }
 }
 /**
- * @param leads
- * @param repository
+ * @param { boolean } fullRender
  * @param contract
  * @returns {Promise<void>}
  */
-export const updateList = async ({ leads, repository, contract }) => {
-  const responsibleIdList = getResponsibleListIdFromLeads(leads)
-  const responsibleList = await repository.fetchContacts(responsibleIdList)
+export const updateList = async (contract, fullRender = true) => {
+  const leads = getLocalStorage('leads');
+  const responsibleList = getLocalStorage('responsibleList');
 
-  await contract.renderList(leads, responsibleList)
-  setupSortButtons(contract)
+  if (fullRender) {
+    await contract.renderList(leads, responsibleList)
+  } else {
+    await contract.reRenderListBody(leads, responsibleList)
+  }
 }
+
 
 /**
  * @returns {Promise<void>}
@@ -82,56 +88,30 @@ export const setupLeads = async () => {
   const contract = document.querySelector('lead-list')
 
   try {
-    let leads = await repository.fetchLeads({
-      page: 1,
-      limit: 10,
-    })
+    const pagination = getLocalStorage('pagination')
+    let leads = await repository.fetchLeads(pagination)
 
-    await updateList({ leads, repository, contract }) // TODO: DUPLICATED CODE
+    setLocalStorage('leads', leads)
+
+    const responsibleIdList = getResponsibleListIdFromLeads(leads)
+    const responsibleList = await repository.fetchContacts(responsibleIdList)
+
+    setLocalStorage('responsibleList', responsibleList)
+
+    await updateList(contract)
+    setupSortButtons(contract)
 
     contract.addEventListener('sort', async (e) => {
       const { ask, desk } = e.detail
       const param = ask ? 'ask': 'desc'
       leads = sortByParam(leads, param, ask || desk)
+      setLocalStorage('leads', leads)
 
-      await updateList({ leads, repository, contract })
+      await updateList(contract, false)
     })
 
   } catch (error) {
     contract.renderError()
     console.error(error)
   }
-}
-
-/**
- * @param {Array<TLead>} leads
- * @returns {Array<number>}
- */
-export const getResponsibleListIdFromLeads = (leads) => {
-  return [...new Set(leads.map(lead => lead.responsible_user_id))]
-}
-
-/**
- * @param leads
- * @param id
- * @returns {*}
- */
-export const findResponsibleById = (leads, id) => {
-  return leads.find(lead => lead.responsible_user_id === id)
-}
-
-/**
- * @param { string } key
- * @param { [] } items
- * @param { 'ask' | 'desk' } param
- * @returns { [] }
- */
-export const sortByParam = (items, param, key) => {
- return items.sort((a, b) => {
-   if (param === 'ask') {
-     return a[key] > b[key] ? 1 : -1
-   } else {
-     return a[key] < b[key] ? 1 : -1
-   }
- })
 }
