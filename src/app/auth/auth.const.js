@@ -1,4 +1,5 @@
 import { ofetch } from 'ofetch'
+import { wrapFetch } from '#root/app/util.js'
 
 export const authData = {
   SECRET: 'arDU0AQrcRK3KrQjFezMgvSe1WGAatNeHpF4nGM90MySpzy55UjOKp41BCZTGooZ',
@@ -10,7 +11,10 @@ export const baseURL = '/proxy'
 
 export const apiFetch = ofetch.create({
   baseURL,
-  parseResponse: JSON.parse
+  parseResponse: JSON.parse,
+  retry: 3,
+  retryDelay: 1000,
+  timeout: 3000,
 })
 
 /**
@@ -18,13 +22,16 @@ export const apiFetch = ofetch.create({
  * @type { function(string): apiFetch }
  */
 export const apiV4Fetch = (token) => {
-  return ofetch.create({
+  return wrapFetch(ofetch.create({
     baseURL: `${baseURL}/api/v4`,
     parseResponse: JSON.parse,
     headers: {
       'Authorization': `Bearer ${token}`
-    }
-  })
+    },
+    retry: 3,
+    retryDelay: 1000,
+    timeout: 3000,
+  }))
 }
 
 export const tokenRequestBody = {

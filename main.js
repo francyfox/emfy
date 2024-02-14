@@ -11,8 +11,6 @@ import { apiV4Fetch } from '#root/app/auth/auth.const.js'
   } catch (e) {
     alert(`Приложению не удалось авторизоваться: \n ${error.message}`)
   }
-
-  const api = apiV4Fetch(getToken().access_token)
-  await setupLeads(api)
+  await setupLeads()
 })()
 

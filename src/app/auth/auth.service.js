@@ -23,8 +23,8 @@ export const apiGetToken = async (
     : { ...tokenRequestBody, grant_type: 'authorization_code', code: authData.CODE }
 })
 
-export const setTokenToLocalStorage = async () => {
-  const response = await apiGetToken()
+export const setTokenToLocalStorage = async (expired, refresh_token) => {
+  const response = await apiGetToken(expired, refresh_token)
   const expires = getExpiration(response.expires_in)
 
   try {
